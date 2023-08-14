@@ -1,22 +1,6 @@
 version: "3.3"
 
 services:
-
-  traefik:
-    image: "traefik:v2.10"
-    container_name: "traefik"
-    command:
-      #- "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
@@ -27,7 +11,7 @@ services:
     environment:
       VIRTUAL_HOST: 'hped1.jsnouff.net'
       TZ: 'America/New_York'
-      WEBPASSWORD: 'boom'
+      WEBPASSWORD: ${WEBPASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^http://hped1.jsnouff.net/$"
@@ -41,3 +25,10 @@ services:
       - './etc-pihole:/etc/pihole'
       - './etc-dnsmasq.d:/etc/dnsmasq.d'
     restart: unless-stopped
+    networks:
+      - traefik_proxy
+
+networks:
+  traefik_proxy:
+    name: traefik_proxy
+    external: true
