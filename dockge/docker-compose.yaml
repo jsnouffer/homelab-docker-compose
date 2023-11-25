@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  dockge:
+    container_name: dockge
+    image: louislam/dockge:1
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dockge.rule=Host(`dockge.jsnouff.net`)"
+      - "traefik.http.routers.dockge.entrypoints=web"
+      - "traefik.http.routers.dockge.service=dockge"
+      - "traefik.http.services.dockge.loadbalancer.server.port=5001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/app/data
+      - /home/jason/docker-compose:/home/jason/docker-compose
+    environment:
+      - DOCKGE_STACKS_DIR=/home/jason/docker-compose
+    networks:
+      - traefik_proxy
+
+networks:
+  traefik_proxy:
+    name: traefik_proxy
+    external: true
