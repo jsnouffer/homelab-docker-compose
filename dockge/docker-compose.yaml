@@ -13,9 +13,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data:/app/data
-      - /home/jason/docker-compose:/home/jason/docker-compose
+      - /etc/docker-compose/services:/etc/docker-compose/services
     environment:
-      - DOCKGE_STACKS_DIR=/home/jason/docker-compose
+      - DOCKGE_STACKS_DIR=/etc/docker-compose/services
     networks:
       - traefik_proxy
 

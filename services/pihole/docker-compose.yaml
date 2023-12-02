@@ -14,9 +14,9 @@ services:
       WEBPASSWORD: ${WEBPASSWORD}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^http://hped1.jsnouff.net/$"
-      - "traefik.http.middlewares.pihole-redirect.redirectregex.replacement=http://hped1.jsnouff.net/admin"
-      - "traefik.http.routers.pihole.rule=Host(`hped1.jsnouff.net`)"
+      - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^http://pihole.jsnouff.net/$"
+      - "traefik.http.middlewares.pihole-redirect.redirectregex.replacement=http://pihole.jsnouff.net/admin"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.jsnouff.net`)"
       - "traefik.http.routers.pihole.entrypoints=web"
       - "traefik.http.routers.pihole.service=pihole"
       - "traefik.http.routers.pihole.middlewares=pihole-redirect"
