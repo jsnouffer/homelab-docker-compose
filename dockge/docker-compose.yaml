@@ -7,7 +7,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dockge.rule=Host(`dockge.jsnouff.net`)"
-      - "traefik.http.routers.dockge.entrypoints=web"
+      - "traefik.http.routers.dockge.entrypoints=websecure"
+      - "traefik.http.routers.dockge.tls.certresolver=cloudflare"
       - "traefik.http.routers.dockge.service=dockge"
       - "traefik.http.services.dockge.loadbalancer.server.port=5001"
     volumes:

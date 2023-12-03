@@ -11,11 +11,23 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=traefik_proxy"
       - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge=true"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.cloudflare.acme.email=${CLOUDFLARE_EMAIL}"
+      - "--certificatesresolvers.cloudflare.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.cloudflare.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080"
+    environment:
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CF_DNS_API_TOKEN=${CLOUDFLARE_API_KEY}
+      - CF_ZONE_API_TOKEN=${CLOUDFLARE_API_KEY}
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - /etc/letsencrypt:/letsencrypt
     restart: unless-stopped
     networks:
       - traefik_proxy

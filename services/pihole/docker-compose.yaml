@@ -9,15 +9,16 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
     environment:
-      VIRTUAL_HOST: 'hped1.jsnouff.net'
+      VIRTUAL_HOST: 'pihole.jsnouff.net'
       TZ: 'America/New_York'
       WEBPASSWORD: ${WEBPASSWORD}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^http://pihole.jsnouff.net/$"
-      - "traefik.http.middlewares.pihole-redirect.redirectregex.replacement=http://pihole.jsnouff.net/admin"
+      - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^https://pihole.jsnouff.net/$"
+      - "traefik.http.middlewares.pihole-redirect.redirectregex.replacement=https://pihole.jsnouff.net/admin"
       - "traefik.http.routers.pihole.rule=Host(`pihole.jsnouff.net`)"
-      - "traefik.http.routers.pihole.entrypoints=web"
+      - "traefik.http.routers.pihole.entrypoints=websecure"
+      - "traefik.http.routers.pihole.tls.certresolver=cloudflare"
       - "traefik.http.routers.pihole.service=pihole"
       - "traefik.http.routers.pihole.middlewares=pihole-redirect"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
