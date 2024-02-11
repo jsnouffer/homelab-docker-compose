@@ -1,0 +1,57 @@
+version: "3.3"
+
+services:
+  infisical:
+    container_name: infisical-backend
+    image: infisical/infisical:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.infisical.rule=Host(`infisical.jsnouff.net`)"
+      - "traefik.http.routers.infisical.entrypoints=websecure"
+      - "traefik.http.routers.infisical.tls.certresolver=cloudflare"
+      - "traefik.http.routers.infisical.service=infisical"
+      - "traefik.http.services.infisical.loadbalancer.server.port=8080"
+    depends_on:
+      - mongo
+      - redis
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+      - MONGO_URL=${MONGO_URL}
+      - SITE_URL=https://infisical.jsnouff.net
+      - REDIS_URL=redis://redis:6379
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+
+  redis:
+    user: 1000:1000
+    container_name: infisical-redis
+    image: redis
+    env_file: .env
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - './data/redis:/data'
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+
+  mongo:
+    user: 1000:1000
+    container_name: infisical-mongo
+    image: mongo
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+      - './data/mongo:/data/db'
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+
+networks:
+  traefik_proxy:
+    name: traefik_proxy
+    external: true
