@@ -1,0 +1,26 @@
+version: "3.3"
+
+services:
+  upsnap:
+    user: 1000:1000
+    container_name: upsnap
+    image: ghcr.io/seriousm4x/upsnap:latest
+    environment:
+      TZ: 'America/New_York'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.upsnap.rule=Host(`upsnap.jsnouff.net`)"
+      - "traefik.http.routers.upsnap.entrypoints=websecure"
+      - "traefik.http.routers.upsnap.tls.certresolver=cloudflare"
+      - "traefik.http.routers.upsnap.service=upsnap"
+      - "traefik.http.services.upsnap.loadbalancer.server.port=8090"
+    volumes:
+      - ./data:/app/pb_data
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+
+networks:
+  traefik_proxy:
+    name: traefik_proxy
+    external: true
