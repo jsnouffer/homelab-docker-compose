@@ -2,10 +2,11 @@ version: "3.8"
 services:
   traefik:
     container_name: traefik
-    image: traefik:v2.10
+    image: traefik:v3.0
     command:
       - "--log.level=DEBUG"
       - "--api.insecure=true"
+      - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=traefik_proxy"
@@ -16,10 +17,15 @@ services:
       - "--certificatesresolvers.cloudflare.acme.email=${CLOUDFLARE_EMAIL}"
       - "--certificatesresolvers.cloudflare.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.cloudflare.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`${DASHBOARD_DOMAIN_NAME}`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=cloudflare"
+      - "traefik.http.routers.api.service=api@internal"
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CF_DNS_API_TOKEN=${CLOUDFLARE_API_KEY}
@@ -54,4 +60,4 @@ services:
 networks:
   traefik_proxy:
     name: traefik_proxy
-    external: true
+    external: false

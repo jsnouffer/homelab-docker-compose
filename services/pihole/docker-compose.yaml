@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 services:
   pihole:
@@ -9,14 +9,14 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
     environment:
-      VIRTUAL_HOST: 'pihole.jsnouff.net'
+      VIRTUAL_HOST: '${PIHOLE_DOMAIN_NAME}'
       TZ: 'America/New_York'
       WEBPASSWORD: ${WEBPASSWORD}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^https://pihole.jsnouff.net/$"
-      - "traefik.http.middlewares.pihole-redirect.redirectregex.replacement=https://pihole.jsnouff.net/admin"
-      - "traefik.http.routers.pihole.rule=Host(`pihole.jsnouff.net`)"
+      - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^https://${PIHOLE_DOMAIN_NAME}/$"
+      - "traefik.http.middlewares.pihole-redirect.redirectregex.replacement=https://${PIHOLE_DOMAIN_NAME}/admin"
+      - "traefik.http.routers.pihole.rule=Host(`${PIHOLE_DOMAIN_NAME}`)"
       - "traefik.http.routers.pihole.entrypoints=websecure"
       - "traefik.http.routers.pihole.tls.certresolver=cloudflare"
       - "traefik.http.routers.pihole.service=pihole"
