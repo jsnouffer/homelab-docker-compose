@@ -3,7 +3,7 @@ version: "3.3"
 services:
   infisical:
     container_name: infisical-backend
-    image: infisical/infisical:latest
+    image: infisical/infisical:v0.43.19
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.infisical.rule=Host(`infisical.jsnouff.net`)"
