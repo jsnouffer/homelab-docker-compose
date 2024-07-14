@@ -1,9 +1,19 @@
 version: "3.3"
 
 services:
+  db-migration:
+    container_name: infisical-db-migration
+    image: infisical/infisical:v0.76.0-postgres
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    command: npm run migration:latest
+    networks:
+      - traefik_proxy
   infisical:
     container_name: infisical-backend
-    image: infisical/infisical:v0.43.19
+    image: infisical/infisical:v0.76.0-postgres
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.infisical.rule=Host(`infisical.jsnouff.net`)"
@@ -12,12 +22,15 @@ services:
       - "traefik.http.routers.infisical.service=infisical"
       - "traefik.http.services.infisical.loadbalancer.server.port=8080"
     depends_on:
-      - mongo
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      db-migration:
+        condition: service_completed_successfully
     env_file: .env
     environment:
       - NODE_ENV=production
-      - MONGO_URL=${MONGO_URL}
       - SITE_URL=https://infisical.jsnouff.net
       - REDIS_URL=redis://redis:6379
     restart: unless-stopped
@@ -37,19 +50,21 @@ services:
     networks:
       - traefik_proxy
 
-  mongo:
+  db:
     user: 1000:1000
-    container_name: infisical-mongo
-    image: mongo
+    container_name: infisical-db
+    image: postgres:14-alpine
     env_file: .env
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     volumes:
-      - './data/mongo:/data/db'
+      - './data/db:/var/lib/postgresql/data'
     restart: unless-stopped
     networks:
       - traefik_proxy
+    healthcheck:
+      test: "pg_isready --username=${POSTGRES_USER} && psql --username=${POSTGRES_USER} --list"
+      interval: 5s
+      timeout: 10s
+      retries: 10
 
 networks:
   traefik_proxy:
