@@ -3,7 +3,7 @@ version: "3.8"
 services:
   pihole:
     container_name: pihole
-    image: pihole/pihole:latest
+    image: pihole/pihole:2024.07.0
     hostname: pihole
     ports:
       - "53:53/tcp"
@@ -26,6 +26,21 @@ services:
       - './etc-pihole:/etc/pihole'
       - './etc-dnsmasq.d:/etc/dnsmasq.d'
     restart: unless-stopped
+    networks:
+      - traefik_proxy
+
+  orbital-sync:
+    container_name: orbital-sync
+    image: mattwebbio/orbital-sync:1
+    depends_on:
+      pihole:
+        condition: service_started
+    environment:
+      INTERVAL_MINUTES: 5
+      PRIMARY_HOST_BASE_URL: http://pihole
+      PRIMARY_HOST_PASSWORD: ${WEBPASSWORD}
+      SECONDARY_HOSTS_1_BASE_URL: https://pihole2-admin.jsnouff.net
+      SECONDARY_HOSTS_1_PASSWORD: ${WEBPASSWORD}
     networks:
       - traefik_proxy
 
