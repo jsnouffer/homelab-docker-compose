@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   traefik:
     container_name: traefik
@@ -32,28 +31,8 @@ services:
       - CF_ZONE_API_TOKEN=${CLOUDFLARE_API_KEY}
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - /etc/letsencrypt:/letsencrypt
+      - ${ACME_CERT_LOCATION:-/etc/letsencrypt}:/letsencrypt
     restart: unless-stopped
-    networks:
-      - traefik_proxy
-
-  dockge:
-    container_name: dockge
-    image: louislam/dockge:1
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.dockge.rule=Host(`${DOCKGE_DOMAIN_NAME}`)"
-      - "traefik.http.routers.dockge.entrypoints=websecure"
-      - "traefik.http.routers.dockge.tls.certresolver=cloudflare"
-      - "traefik.http.routers.dockge.service=dockge"
-      - "traefik.http.services.dockge.loadbalancer.server.port=5001"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./data:/app/data
-      - /etc/docker-compose/services:/etc/docker-compose/services
-    environment:
-      - DOCKGE_STACKS_DIR=/etc/docker-compose/services
     networks:
       - traefik_proxy
 

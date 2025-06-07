@@ -1,0 +1,148 @@
+[[server]]
+name = "octavia"
+tags = ["exported"]
+[server.config]
+address = "https://periphery.octavia.jsnouff.net"
+enabled = true
+
+##
+
+[[server]]
+name = "qbittorrent"
+tags = ["exported"]
+[server.config]
+address = "http://qbittorrent.jsnouff.net:8120"
+enabled = true
+
+##
+
+[[server]]
+name = "truenas"
+tags = ["exported"]
+[server.config]
+address = "http://barenas.jsnouff.net:8120"
+enabled = true
+mem_warning = 85.0
+
+##
+
+[[stack]]
+name = "infisical"
+tags = ["exported"]
+[stack.config]
+server = "octavia"
+project_name = "infisical"
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/infisical"
+file_paths = ["docker-compose.yaml"]
+ignore_services = ["db-migration"]
+
+##
+
+[[stack]]
+name = "octavia-cloudflare-tunnel"
+tags = ["exported"]
+[stack.config]
+server = "octavia"
+project_name = "cloudflare-tunnel"
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/cloudflare-tunnel"
+file_paths = ["docker-compose.yaml"]
+
+##
+
+[[stack]]
+name = "octavia-traefik"
+tags = ["exported"]
+[stack.config]
+server = "octavia"
+project_name = "traefik"
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/traefik"
+file_paths = ["docker-compose.yaml"]
+
+##
+
+[[stack]]
+name = "octavia-watchtower"
+tags = ["exported"]
+[stack.config]
+server = "octavia"
+project_name = "watchtower"
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/watchtower"
+file_paths = ["docker-compose.yaml"]
+
+##
+
+[[stack]]
+name = "pihole"
+tags = ["exported"]
+[stack.config]
+server = "octavia"
+project_name = "pihole"
+poll_for_updates = true
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/pihole"
+file_paths = ["docker-compose.yaml"]
+
+##
+
+[[stack]]
+name = "qbittorrent"
+tags = ["exported"]
+[stack.config]
+server = "qbittorrent"
+project_name = "qbittorrent"
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/qbittorrent"
+file_paths = ["docker-compose.yaml"]
+
+##
+
+[[stack]]
+name = "uptime-kuma"
+tags = ["exported"]
+[stack.config]
+server = "octavia"
+project_name = "uptime-kuma"
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/uptime-kuma"
+file_paths = ["docker-compose.yaml"]
+
+##
+
+[[builder]]
+name = "amd64-builder"
+tags = ["exported"]
+[builder.config]
+type = "Server"
+params.server_id = "truenas"
+
+##
+
+[[builder]]
+name = "arm-builder"
+tags = ["exported"]
+[builder.config]
+type = "Server"
+params.server_id = "octavia"
+
+##
+
+[[resource_sync]]
+name = "github-sync"
+tags = ["exported"]
+[resource_sync.config]
+repo = "jsnouffer/homelab-docker-compose"
+git_account = "jsnouffer"
+resource_path = ["komodo.toml"]
+managed = true
+match_tags = ["exported"]

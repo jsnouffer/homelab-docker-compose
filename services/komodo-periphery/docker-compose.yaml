@@ -1,0 +1,30 @@
+services:
+  periphery:
+    container_name: periphery
+    image: ghcr.io/moghtech/komodo-periphery:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
+    labels:
+      - "komodo.skip"
+      - "traefik.enable=true"
+      - "traefik.http.routers.periphery.rule=Host(`${PERIPHERY_DOMAIN_NAME}`)"
+      - "traefik.http.routers.periphery.entrypoints=websecure"
+      - "traefik.http.routers.periphery.tls.certresolver=cloudflare"
+      - "traefik.http.routers.periphery.service=periphery"
+      - "traefik.http.services.periphery.loadbalancer.server.port=8120"
+    restart: unless-stopped
+    environment:
+      PERIPHERY_ROOT_DIRECTORY: ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+      PERIPHERY_PASSKEYS: ${PERIPHERY_PASSKEY}
+      PERIPHERY_SSL_ENABLED: false
+      PERIPHERY_DISABLE_TERMINALS: false
+      PERIPHERY_INCLUDE_DISK_MOUNTS: /etc/hostname
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/proc
+      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+    networks:
+      - traefik_proxy
+
+networks:
+  traefik_proxy:
+    name: traefik_proxy
+    external: true
