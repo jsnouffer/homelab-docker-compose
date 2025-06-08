@@ -10,6 +10,7 @@ services:
       - "traefik.http.routers.periphery.tls.certresolver=cloudflare"
       - "traefik.http.routers.periphery.service=periphery"
       - "traefik.http.services.periphery.loadbalancer.server.port=8120"
+      - "com.centurylinklabs.watchtower.enable=false"
     restart: unless-stopped
     environment:
       PERIPHERY_ROOT_DIRECTORY: ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}

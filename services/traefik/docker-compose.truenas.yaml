@@ -22,6 +22,11 @@ services:
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=cloudflare"
       - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.services.truenas.loadbalancer.server.url=http://barenas.jsnouff.net:8080"
+      - "traefik.http.routers.truenas.rule=Host(`barenas.jsnouff.net`)"
+      - "traefik.http.routers.truenas.entrypoints=websecure"
+      - "traefik.http.routers.truenas.tls.certresolver=cloudflare"
+      - "traefik.http.routers.truenas.service=truenas"
     ports:
       - "80:80"
       - "443:443"
@@ -31,7 +36,7 @@ services:
       - CF_ZONE_API_TOKEN=${CLOUDFLARE_API_KEY}
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - ${ACME_CERT_LOCATION:-/etc/letsencrypt}:/letsencrypt
+      - acme:/letsencrypt
     restart: unless-stopped
     networks:
       - traefik_proxy
@@ -40,3 +45,6 @@ networks:
   traefik_proxy:
     name: traefik_proxy
     external: false
+
+volumes:
+  acme:
