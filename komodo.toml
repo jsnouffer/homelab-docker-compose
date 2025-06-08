@@ -119,6 +119,20 @@ file_paths = ["docker-compose.yaml"]
 
 ##
 
+[[build]]
+name = "python-tools"
+tags = ["exported"]
+[build.config]
+builder = "amd64-builder"
+image_name = "docker-containers/python-tools"
+git_account = "jsnouffer"
+repo = "jsnouffer/docker-containers"
+build_path = "python-tools"
+image_registry.domain = "ghcr.io"
+image_registry.account = "jsnouffer"
+
+##
+
 [[builder]]
 name = "amd64-builder"
 tags = ["exported"]
