@@ -20,12 +20,12 @@ services:
       NVIDIA_VISIBLE_DEVICES: ${GPU_DEVICE_ID}
     deploy:
       resources:
-        limits:
-          cpus: "4"
-          memory: 16384M
+        # limits:
+        #   cpus: "4"
+        #   memory: 16384M
         reservations:
-          cpus: '0.50'
-          memory: 4096M
+          # cpus: '0.50'
+          # memory: 4096M
           devices:
             - capabilities:
                 - gpu
