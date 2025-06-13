@@ -1,0 +1,50 @@
+services:
+  ollama:
+    user: 1000:1000
+    container_name: ollama
+    image: ollama/ollama:0.9.1-rc0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ollama.rule=Host(`${OLLAMA_DOMAIN_NAME}`)"
+      - "traefik.http.routers.ollama.entrypoints=websecure"
+      - "traefik.http.routers.ollama.tls.certresolver=cloudflare"
+      - "traefik.http.routers.ollama.service=ollama"
+      - "traefik.http.services.ollama.loadbalancer.server.port=30068"
+    restart: unless-stopped
+    environment:
+      TZ: America/New_York
+      OLLAMA_KEEP_ALIVE: 24h
+      OLLAMA_HOST: 0.0.0.0:30068
+      OLLAMA_ORIGINS: chrome-extension://*,moz-extension://*,safari-web-extension://* ollama serve
+      NVIDIA_DRIVER_CAPABILITIES: all
+      NVIDIA_VISIBLE_DEVICES: ${GPU_DEVICE_ID}
+    deploy:
+      resources:
+        # limits:
+        #   cpus: "4"
+        #   memory: 16384M
+        reservations:
+          # cpus: '0.50'
+          # memory: 4096M
+          devices:
+            - capabilities:
+                - gpu
+              device_ids:
+                - ${GPU_DEVICE_ID}
+              driver: nvidia
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges=true
+    volumes:
+      - ollama_data:/.ollama
+    networks:
+      - traefik_proxy
+
+networks:
+  traefik_proxy:
+    name: traefik_proxy
+    external: true
+
+volumes:
+  ollama_data:

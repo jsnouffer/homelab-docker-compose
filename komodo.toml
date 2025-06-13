@@ -80,6 +80,22 @@ file_paths = ["docker-compose.yaml"]
 ##
 
 [[stack]]
+name = "ollama"
+tags = ["exported"]
+[stack.config]
+server = "truenas"
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/ollama"
+file_paths = ["docker-compose.yaml"]
+environment = """
+OLLAMA_DOMAIN_NAME=ollama.jsnouff.net
+GPU_DEVICE_ID=GPU-2c3d24de-bc0f-c84d-7df7-f4f18a464a3b
+"""
+
+##
+
+[[stack]]
 name = "pihole"
 tags = ["exported"]
 [stack.config]
