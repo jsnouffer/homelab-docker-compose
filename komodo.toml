@@ -80,6 +80,22 @@ file_paths = ["docker-compose.yaml"]
 ##
 
 [[stack]]
+name = "ollama"
+tags = ["exported"]
+[stack.config]
+server = "truenas"
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/ollama"
+file_paths = ["docker-compose.yaml"]
+environment = """
+OLLAMA_DOMAIN_NAME=ollama.jsnouff.net
+GPU_DEVICE_ID=GPU-2c3d24de-bc0f-c84d-7df7-f4f18a464a3b
+"""
+
+##
+
+[[stack]]
 name = "pihole"
 tags = ["exported"]
 [stack.config]
@@ -119,19 +135,20 @@ file_paths = ["docker-compose.yaml"]
 
 ##
 
-[[stack]]
-name = "ollama"
+[[build]]
+name = "morphic"
 tags = ["exported"]
-[stack.config]
-server = "truenas"
+[build.config]
+builder = "amd64-builder"
+version = "0.5.0"
+auto_increment_version = false
+image_name = "miurla/morphic"
+image_tag = "v0.5.0-alpha.3"
 git_account = "jsnouffer"
-repo = "jsnouffer/homelab-docker-compose"
-run_directory = "services/ollama"
-file_paths = ["docker-compose.yaml"]
-environment = """
-OLLAMA_DOMAIN_NAME=ollama.jsnouff.net
-GPU_DEVICE_ID=GPU-2c3d24de-bc0f-c84d-7df7-f4f18a464a3b
-"""
+repo = "miurla/morphic"
+branch = "v0.5.0-alpha.3"
+image_registry.domain = "ghcr.io"
+image_registry.account = "jsnouffer"
 
 ##
 
