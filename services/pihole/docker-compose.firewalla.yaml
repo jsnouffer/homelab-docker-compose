@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:2024.07.0
+    environment:
+      WEBPASSWORD: ${WEBPASSWORD}
+    volumes:
+      - './etc-pihole:/etc/pihole'
+      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+      - '/etc/localtime:/etc/localtime:ro'
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    networks:
+      default:
+        ipv4_address: 172.16.0.1
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.16.0.0/24
