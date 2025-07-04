@@ -41,19 +41,6 @@ ignore_services = ["db-migration"]
 ##
 
 [[stack]]
-name = "octavia-cloudflare-tunnel"
-tags = ["exported"]
-[stack.config]
-server = "octavia"
-project_name = "cloudflare-tunnel"
-git_account = "jsnouffer"
-repo = "jsnouffer/homelab-docker-compose"
-run_directory = "services/cloudflare-tunnel"
-file_paths = ["docker-compose.yaml"]
-
-##
-
-[[stack]]
 name = "octavia-traefik"
 tags = ["exported"]
 [stack.config]
