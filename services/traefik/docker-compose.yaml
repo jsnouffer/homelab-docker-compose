@@ -22,6 +22,11 @@ services:
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=cloudflare"
       - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.services.upsnap.loadbalancer.server.url=http://octavia.jsnouff.net:5000"
+      - "traefik.http.routers.upsnap.rule=Host(`upsnap.jsnouff.net`)"
+      - "traefik.http.routers.upsnap.entrypoints=websecure"
+      - "traefik.http.routers.upsnap.tls.certresolver=cloudflare"
+      - "traefik.http.routers.upsnap.service=upsnap"
     ports:
       - "80:80"
       - "443:443"

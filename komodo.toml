@@ -110,6 +110,19 @@ file_paths = ["docker-compose.yaml"]
 ##
 
 [[stack]]
+name = "upsnap"
+tags = ["exported"]
+[stack.config]
+server = "octavia"
+project_name = "upsnap"
+git_account = "jsnouffer"
+repo = "jsnouffer/homelab-docker-compose"
+run_directory = "services/upsnap"
+file_paths = ["docker-compose.yaml"]
+
+##
+
+[[stack]]
 name = "uptime-kuma"
 tags = ["exported"]
 [stack.config]
