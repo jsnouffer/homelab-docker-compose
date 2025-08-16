@@ -3,7 +3,7 @@ version: "3.3"
 services:
   db-migration:
     container_name: infisical-db-migration
-    image: infisical/infisical:v0.132.2-postgres
+    image: infisical/infisical:v0.147.1
     depends_on:
       db:
         condition: service_healthy
@@ -11,9 +11,10 @@ services:
     command: npm run migration:latest
     networks:
       - traefik_proxy
+
   infisical:
     container_name: infisical-backend
-    image: infisical/infisical:v0.132.2-postgres
+    image: infisical/infisical:v0.147.1
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.infisical.rule=Host(`infisical.jsnouff.net`)"
@@ -53,7 +54,7 @@ services:
   db:
     user: 1000:1000
     container_name: infisical-db
-    image: postgres:14-alpine
+    image: postgres:16-alpine
     env_file: .env
     volumes:
       - './data/db:/var/lib/postgresql/data'
