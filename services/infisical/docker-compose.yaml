@@ -3,7 +3,7 @@ version: "3.3"
 services:
   db-migration:
     container_name: infisical-db-migration
-    image: infisical/infisical:v0.147.1
+    image: infisical/infisical:v0.159.9
     depends_on:
       db:
         condition: service_healthy
@@ -14,7 +14,7 @@ services:
 
   infisical:
     container_name: infisical-backend
-    image: infisical/infisical:v0.147.1
+    image: infisical/infisical:v0.159.9
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.infisical.rule=Host(`infisical.jsnouff.net`)"
