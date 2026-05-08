@@ -22,6 +22,7 @@ tags = ["exported"]
 [server.config]
 address = "http://barenas.jsnouff.net:8120"
 enabled = true
+send_mem_alerts = false
 mem_warning = 85.0
 
 ##
@@ -144,8 +145,9 @@ image_name = "docker-containers/python-tools"
 git_account = "jsnouffer"
 repo = "jsnouffer/docker-containers"
 build_path = "python-tools"
-image_registry.domain = "ghcr.io"
-image_registry.account = "jsnouffer"
+image_registry = [
+  { domain = "ghcr.io", account = "jsnouffer" }
+]
 
 ##
 
@@ -154,7 +156,7 @@ name = "amd64-builder"
 tags = ["exported"]
 [builder.config]
 type = "Server"
-params.server_id = "truenas"
+params.server = "truenas"
 
 ##
 
@@ -163,7 +165,7 @@ name = "arm-builder"
 tags = ["exported"]
 [builder.config]
 type = "Server"
-params.server_id = "octavia"
+params.server = "octavia"
 
 ##
 
