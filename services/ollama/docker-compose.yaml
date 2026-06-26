@@ -2,7 +2,7 @@ services:
   ollama:
     user: 1000:1000
     container_name: ollama
-    image: ollama/ollama:0.9.1-rc0
+    image: ollama/ollama:0.30.11
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ollama.rule=Host(`${OLLAMA_DOMAIN_NAME}`)"
